@@ -1,6 +1,6 @@
 package andrea_freddi.U5_W3_D5_J.payloads;
 
-import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -18,7 +18,7 @@ public record EventPayload(
         @Size(max = 100, message = "Description cannot exceed 100 characters")
         String description,
         @NotEmpty(message = "Date cannot be empty")
-        @FutureOrPresent(message = "Date must be in the future or present")
+        @Future(message = "Date must be in the future")
         LocalDate date,
         @NotEmpty(message = "Location cannot be empty")
         @Size(max = 20, message = "Location cannot exceed 20 characters")
