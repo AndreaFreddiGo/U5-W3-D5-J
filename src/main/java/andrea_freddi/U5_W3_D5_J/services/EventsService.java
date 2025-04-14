@@ -19,10 +19,10 @@ import java.util.UUID;
 
 @Service
 public class EventsService {
-
+    // inietto il repository per gli eventi
     @Autowired
     private EventsRepository eventsRepository;
-
+    // inietto il repository per gli utenti
     @Autowired
     private UsersRepository usersRepository;
 

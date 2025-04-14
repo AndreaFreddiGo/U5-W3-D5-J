@@ -18,6 +18,7 @@ import java.util.UUID;
 
 @Service
 public class UsersService {
+    // inietto il repository per accedere al database
     @Autowired
     private UsersRepository usersRepository;
 

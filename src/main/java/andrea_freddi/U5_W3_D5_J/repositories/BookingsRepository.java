@@ -11,4 +11,7 @@ import java.util.UUID;
 public interface BookingsRepository extends JpaRepository<Booking, UUID> {
     // creo un metodo per trovare tutte le prenotazioni ad un evento
     List<Booking> findAllByEventId(UUID id);
+
+    // creo un metodo per trovare tutte le prenotazioni di un utente
+    List<Booking> findAllByUserId(UUID id);
 }
