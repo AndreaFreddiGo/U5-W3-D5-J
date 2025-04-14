@@ -3,6 +3,7 @@ package andrea_freddi.U5_W3_D5_J.services;
 import andrea_freddi.U5_W3_D5_J.entities.Event;
 import andrea_freddi.U5_W3_D5_J.entities.User;
 import andrea_freddi.U5_W3_D5_J.exception.BadRequestException;
+import andrea_freddi.U5_W3_D5_J.exception.NotFoundException;
 import andrea_freddi.U5_W3_D5_J.payloads.EventPayload;
 import andrea_freddi.U5_W3_D5_J.repositories.EventsRepository;
 import andrea_freddi.U5_W3_D5_J.repositories.UsersRepository;
@@ -65,23 +66,23 @@ public class EventsService {
     }
 
     // creo un metodo per trovare un evento per id
-    public Event findById(UUID id) {
+    public Event findById(UUID eventId) {
         // cerco l'evento per id
-        return this.eventsRepository.findById(id).orElseThrow(
-                () -> new BadRequestException("Event not found!"));
+        return this.eventsRepository.findById(eventId).orElseThrow(
+                () -> new NotFoundException(eventId));
     }
 
     // creo un metodo per trovare un evento per titolo
     public Event findByTitle(String title) {
         // cerco l'evento per titolo
         return this.eventsRepository.findByTitle(title).orElseThrow(
-                () -> new BadRequestException("Event not found!"));
+                () -> new NotFoundException(title));
     }
 
     // creo un metodo per aggiornare un evento
-    public Event update(EventPayload body, UUID id) {
+    public Event findByIdAndUpdate(EventPayload body, UUID eventId) {
         // cerco l'evento con il metodo findById che gestisce l'eccezione
-        Event found = this.findById(id);
+        Event found = this.findById(eventId);
         // se lo trovo, aggiorno i campi
         found.setTitle(body.title());
         found.setDescription(body.description());
@@ -93,9 +94,9 @@ public class EventsService {
     }
 
     // creo un metodo per eliminare un evento
-    public void deleteById(UUID id) {
+    public void findByIdAndDelete(UUID eventId) {
         // cerco l'evento con il metodo findById che gestisce l'eccezione
-        Event found = this.findById(id);
+        Event found = this.findById(eventId);
         // se lo trovo, lo elimino
         this.eventsRepository.delete(found);
     }
