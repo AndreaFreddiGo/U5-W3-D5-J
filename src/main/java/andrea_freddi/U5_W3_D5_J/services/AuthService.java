@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+// creo un servizio per gestire l'autenticazione degli utenti
+
 @Service
 public class AuthService {
     // inietto UserService per cercare l'utente
