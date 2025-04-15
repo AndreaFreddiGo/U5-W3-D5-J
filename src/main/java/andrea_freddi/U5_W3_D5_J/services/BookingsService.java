@@ -34,14 +34,14 @@ public class BookingsService {
     private EventsService eventsService;
 
     // creo un metodo per salvare una nuova prenotazione
-    public Booking save(BookingPayload body) {
+    public Booking save(BookingPayload body, User user) {
         Integer totalBookings = this.bookingsRepository.findAllByEventId(body.event().getId()).size();
         // prima verifico se l'utente e l'evento esistono
-        User foundUser = this.usersService.findById(body.user().getId());
+        User foundUser = this.usersService.findById(user.getId());
         Event foundEvent = this.eventsService.findById(body.event().getId());
         // controllo anche se l'utente ha già prenotato l'evento
         if (this.bookingsRepository.findAllByEventId(body.event().getId()).stream()
-                .anyMatch(booking -> booking.getUser().getId().equals(body.user().getId()))) {
+                .anyMatch(booking -> booking.getUser().getId().equals(user.getId()))) {
             throw new BadRequestException("User already booked this event");
             // ed infine controllo se ci sono ancora posti disponibili per l'evento
         } else if (totalBookings == foundEvent.getCapacity()) {
@@ -49,7 +49,7 @@ public class BookingsService {
         } else {
             // se è tutto ok, creo una nuova prenotazione
             Booking newBooking = new Booking();
-            newBooking.setUser(body.user());
+            newBooking.setUser(user);
             newBooking.setEvent(body.event());
             // salvo la prenotazione nel database
             return this.bookingsRepository.save(newBooking);
@@ -79,7 +79,7 @@ public class BookingsService {
     }
 
     // creo un metodo per trovare tutte le prenotazioni
-    public Page<Booking> findAll(String date, int page, int size, String sortBy) {
+    public Page<Booking> findAll(int page, int size, String sortBy) {
         if (size > 20) size = 20; // limito la dimensione massima a 20
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
         return this.bookingsRepository.findAll(pageable);
@@ -93,22 +93,22 @@ public class BookingsService {
     }
 
     // creo un metodo per aggiornare una prenotazione
-    public Booking update(UUID bookingId, BookingPayload body) {
+    public Booking update(UUID bookingId, BookingPayload body, User user) {
         // Se la prenotazione non esiste, viene lanciata NotFoundException
         Booking foundBooking = this.findById(bookingId);
         // prima verifico se l'utente e l'evento esistono
-        User foundUser = this.usersService.findById(body.user().getId());
+        User foundUser = this.usersService.findById(user.getId());
         Event foundEvent = this.eventsService.findById(body.event().getId());
         // controllo anche se l'utente ha già prenotato l'evento
         if (this.bookingsRepository.findAllByEventId(body.event().getId()).stream()
-                .anyMatch(booking -> booking.getUser().getId().equals(body.user().getId()))) {
+                .anyMatch(booking -> booking.getUser().getId().equals(user.getId()))) {
             throw new BadRequestException("User already booked this event");
             // ed infine controllo se ci sono ancora posti disponibili per l'evento
         } else if (this.bookingsRepository.findAllByEventId(body.event().getId()).size() == foundEvent.getCapacity()) {
             throw new BadRequestException("Event is fully booked");
         } else {
             // se è tutto ok, aggiorno la prenotazione
-            foundBooking.setUser(body.user());
+            foundBooking.setUser(user);
             foundBooking.setEvent(body.event());
             // salvo la prenotazione nel database
             return this.bookingsRepository.save(foundBooking);
